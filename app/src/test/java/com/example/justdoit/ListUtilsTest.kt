@@ -4,35 +4,32 @@ import com.example.justdoit.list.determineCardColor
 import org.junit.Test
 
 import org.junit.Assert.*
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-class ListUtilsTest {
-    val now = System.currentTimeMillis()
-    val day = 1000 * 60 * 60 * 24
+@RunWith(Parameterized::class)
+class ListUtilsTest(
+    private val expected :Int,
+    private val dueDate : Long?,
+    private val done : Boolean,
+    private val scenario : String
+) {
+    companion object {
+        val now = System.currentTimeMillis()
+        val day = 1000 * 60 * 60 * 24
+        //to let kotlin know to generate a static method for the junit inorder to connect to
+        @JvmStatic
+        @Parameterized.Parameters(name = "determineCardColor: {3}" )
+        fun todos() = listOf(
+            arrayOf(R.color.todoDone,null, true , "with done = true and no due date then return todoDone color"),
+            arrayOf(R.color.todoNotDue,null, false , "with done = false and no due date then return todoNotDue color"),
+            arrayOf(R.color.todoOverDue,now - day, false , "with done = false and no due date then return todoOverDue color")
 
+        )
+    }
     @Test
     fun `test_determineCardColor() with overdue Null then return color of overDue`(){
-        //arrange
-        val expected = R.color.todoOverDue
-        val dueDate = now - day
-        val done = false
 
-        //act
-        val actual = determineCardColor(dueDate, done)
-
-        //assert
-        assertEquals(expected,actual)
-    }
-    @Test
-    fun `test_determineCardColor() with done equal true and dueDate equals Null then return color todoDone`(){
-        //arrange
-        val expected = R.color.todoDone
-        val dueDate = null
-        val done = true
 
         //act
         val actual = determineCardColor(dueDate, done)
@@ -41,14 +38,4 @@ class ListUtilsTest {
         assertEquals(expected,actual)
     }
 
-    @Test
-    fun `test_determineCardColor() with done equals false and due date equals null then return color of todoNotdue`(){
-        val expected = R.color.todoNotDue
-        val dueDate = null
-        val done = false
-
-        val actual = determineCardColor(dueDate, done)
-
-        assertEquals(expected,actual)
-    }
 }
