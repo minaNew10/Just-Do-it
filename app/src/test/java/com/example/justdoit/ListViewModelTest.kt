@@ -6,11 +6,17 @@ import com.example.justdoit.list.ListViewModel
 import com.example.justdoit.util.ToDoTestRepository
 import org.junit.Assert.*
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExpectedException
 
 class ListViewModelTest {
     lateinit var repository: ToDoRepository
-
+    //this tells junit that we are not expecting exceptions on tests
+    //what gives us the ability to capture them on a per test basis
+    //since kotlin makes all properties private by default we will need to add agetter
+    @get:Rule
+    val exceptionRule: ExpectedException = ExpectedException.none()
     @Before
     fun setup(){
         //unit testing prioritize readability over reuse
@@ -52,5 +58,14 @@ class ListViewModelTest {
         val todosCount = model.upcomingTodosCount.value
         assertNotNull(todosCount)
         assertEquals(expectedCount,todosCount)
+    }
+
+    @Test
+    fun test_toggleTodo(){
+        val id = -1L
+        val model = ListViewModel(repository)
+
+        exceptionRule.expect(NotImplementedError::class.java)
+        model.toggleTodo(id)
     }
 }
