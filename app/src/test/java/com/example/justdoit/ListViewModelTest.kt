@@ -57,7 +57,8 @@ class ListViewModelTest {
     @Test
     fun `getAllTodos() with an multiple todos then return an arraylist contains the same number of todos()`(){
         val expectedCount = 3
-        val repository : ToDoRepository = mock()
+        //add this argument when you face troubles but not by default
+        val repository : ToDoRepository = mock(verboseLogging = true)
         whenever(repository.getAllToDos())
             .thenReturn(MutableLiveData(arrayListOf(
                 ToDo(5,"ToDo 5",now + day,false,now),
