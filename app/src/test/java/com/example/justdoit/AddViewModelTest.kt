@@ -4,9 +4,13 @@ import com.example.justdoit.add.AddViewModel
 import com.example.justdoit.data.ToDoRepository
 import com.nhaarman.mockitokotlin2.*
 import org.junit.Assert.*
+import org.junit.Rule
 import org.junit.Test
+import org.mockito.junit.MockitoJUnit
 
 class AddViewModelTest{
+    @get:Rule
+    val collector = MockitoJUnit.collector()
     @Test
     fun `testInsertTodo with a title and without date then the function works properly and save the same todo` (){
         val repo : ToDoRepository = mock()
@@ -17,7 +21,13 @@ class AddViewModelTest{
         val actual = model.save()
 
         assertNull(actual)
-        verify(repo).insert(argThat { 
+        verify(repo).insert(any())
+        //this verification is intentionally error prone
+        verify(repo).insert(
+            argThat { created == System.currentTimeMillis() }
+        )
+        verify(repo).insert(
+            argThat {
             title == actualTitle && dueDate == null
         })
     }
